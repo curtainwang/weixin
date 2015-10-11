@@ -27,8 +27,7 @@
 		
 		
 		
-		public function reponseMsg()
-		{
+		public function reponseMsg(){
 			//1.获取到微信推送过来的的post数据（xml格式）
 			$postArr = $GLOBALS['HTTP_RAW_POST_DATA'];
 			
@@ -86,3 +85,64 @@
 		  
 		}
 		
+		//强大的curl工具
+		function http_curl(){
+			//1.初始化curl
+			$ch = curl_init();
+			$url = 'http://www.imooc.com';
+			//2.设置curl的参数
+			curl_setopt( $ch, CURLOPT_URL, $url);
+			//3.返回
+			curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1);			
+			//4.采集
+			$output = curl_exec($ch);
+			//5.关闭
+			curl_close($ch);
+			var_dump( $output ); //打印
+		}
+		
+		//获得access token值
+		function getAccessToken(){
+			//1.请求url地址
+			$appid = 'skaldflksa';
+			$appsecret = 'slfasdkfjsldfssdkfdfd';
+			$url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=".$appid."&secret=".$appsecret;
+			//2.初始化
+			$ch = curl_init();
+			//3.设置参数
+			curl_setopt( $ch, CURLOPT_URL, $url);			
+			curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1);		
+			//4.调用接口
+		  $res = curl_exec($ch);
+		  //5.关闭curl
+		  curl_close($ch);
+		  
+		  if(curl_errno($ch)){
+		  	var_dump(curl_eror($ch));
+		  }
+		  
+		  //json_decode把json转化为数组， json_encode把数组转化为json
+		  $arr = json_decode($res, true);
+		  var_dump($arr);
+		}
+		
+		//
+		function getWeixinServerIp(){
+			$accesstoken = "";//里面的值是上面的getAccessToken函数获得的access token值
+			$url = "https://api.weixin.qq.com/cgi-bin/getcallbackip?access_token=".$accesstoken;
+			$ch = curl_init();
+			curl_setopt( $ch, CURLOPT_URL, $url);			
+			curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1);		
+		  $res = curl_exec($ch);
+		  curl_close($ch);
+		  
+		  if(curl_errno($ch)){
+		  	var_dump(curl_eror($ch));
+		  }
+		  
+		  //json_decode把json转化为数组， json_encode把数组转化为json
+		  $arr = json_decode($res, true);
+		  echo "<pre>";
+		  var_dump($arr);
+		  echo "</pre>";
+		}
